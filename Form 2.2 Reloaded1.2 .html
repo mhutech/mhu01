@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="stylesc.css">
+    <title>DESCHIDERE CARANTINA</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+
+<body>
+    <div class="titlu">Carantina MOE 1.1</div>
+
+    <div class="form">
+        <form method="POST" action="http://192.168.33.1/relay/0?turn=on" target="_blank" onsubmit="return saveValues();">
+            
+            <label for="Motiv">Motivul intrarii:</label>
+            <input type="text" id="Motiv" name="Motiv" required minlength="10" onchange="validateForm()"><br><br>
+            
+            <label for="PN">PN Blocat____:</label>
+            <input type="text" id="PN" name="PN" required onchange="validateForm()"><br><br>
+            
+            <label for="codAngajat">COD Angajat_:</label>
+            <input type="text" id="codAngajat" name="codAngajat" required minlength="8" maxlength="8" onchange="autocompletare(); validateForm()"><br><br>
+
+            <label for="nume">Nume_______:</label>
+            <input type="text" id="nume" name="name" required readonly><br><br>
+
+            <label for="prenume">Prenume_____:</label>
+            <input type="text" id="prenume" name="prenume" required readonly><br><br>
+
+            <input type="submit" value="APASA PENTRU A DESCHIDE USA" id="submitButton" disabled>
+            <input type="button" value="Save" onclick="saveValues()" id="saveButton" disabled>
+        </form>
+    </div>
+
+    <script>
+        function autocompletare() {
+            var codAngajat = document.getElementById("codAngajat").value;
+
+            var angajati = {
+                "86404047": {
+                    nume: "Laurentiu",
+                    prenume: "Mihu",
+                    data: getCurrentDateTime()
+                },
+                "86402169": {
+                    nume: "Pinca",
+                    prenume: "Mircea",
+                    data: getCurrentDateTime()
+                },
+                "86404092": {
+                    nume: "Hategan",
+                    prenume: "Nicolae",
+                    data: getCurrentDateTime()
+                },
+                "86400834": {
+                    nume: "Treger",
+                    prenume: "Sabina",
+                    data: getCurrentDateTime()
+                },
+                "86403153": {
+                    nume: "Ignat",
+                    prenume: "Mihai",
+                    data: getCurrentDateTime()
+                },
+                "86401625": {
+                    nume: "Musca",
+                    prenume: "Marius",
+                    data: getCurrentDateTime()
+                },
+                "86401232": {
+                    nume: "Chifor",
+                    prenume: "Ana",
+                    data: getCurrentDateTime()
+                },
+                "86402803": {
+                    nume: "Dirlosan",
+                    prenume: "Marius",
+                    data: getCurrentDateTime()
+                },
+                "86405781": {
+                    nume: "Tholvay",
+                    prenume: "Corina",
+                    data: getCurrentDateTime()
+                },
+                "86400333": {
+                    nume: "Botan",
+                    prenume: "Camelia",
+                    data: getCurrentDateTime()
+                },
+                "86402954": {
+                    nume: "Dobo",
+                    prenume: "Sidonia",
+                    data: getCurrentDateTime()
+                }
+                // Rest of the employee data...
+            };
+
+            if (codAngajat in angajati) {
+                var angajat = angajati[codAngajat];
+                document.getElementById("nume").value = angajat.nume;
+                document.getElementById("prenume").value = angajat.prenume;
+            } else {
+                document.getElementById("nume").value = "";
+                document.getElementById("prenume").value = "";
+                alert("Acces Neautorizat");
+            }
+        }
+        
+        // Function to get the current date and time
+        function getCurrentDateTime() {
+            var currentDate = new Date();
+            return currentDate.toLocaleString();
+        }
+
+        function validateForm() {
+            var motiv = document.getElementById("Motiv").value;
+            var pn = document.getElementById("PN").value;
+            var codAngajat = document.getElementById("codAngajat").value;
+
+            if (motiv !== "" && pn !== "" && codAngajat !== "") {
+                document.getElementById("submitButton").disabled = false;
+                document.getElementById("saveButton").disabled = false;
+            } else {
+                document.getElementById("submitButton").disabled = true;
+                document.getElementById("saveButton").disabled = true;
+            }
+        }
+        function saveValues() {
+  var motiv = document.getElementById("Motiv").value;
+  var pn = document.getElementById("PN").value;
+  var codAngajat = document.getElementById("codAngajat").value;
+  var nume = document.getElementById("nume").value;
+  var prenume = document.getElementById("prenume").value;
+  var dateTime = getCurrentDateTime();
+
+  var existingData = localStorage.getItem("form_data");
+  var newData = motiv + "," + pn + "," + codAngajat + "," + nume + "," + prenume + "," + dateTime + "\n";
+  var updatedData = existingData ? existingData + newData : newData;
+
+  localStorage.setItem("form_data", updatedData);
+
+  // Start the file download
+  var link = document.createElement("a");
+  link.href = "data:text/plain;charset=utf-8," + encodeURIComponent(updatedData);
+  link.download = "form_data.txt";
+  link.click();
+
+  document.getElementById("Motiv").value = "";
+document.getElementById("PN").value = "";
+document.getElementById("codAngajat").value = "";
+document.getElementById("nume").value = "";
+document.getElementById("prenume").value = "";
+}
+
+    </script>
+</body>
+</html>
+
